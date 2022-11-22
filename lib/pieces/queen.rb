@@ -2,7 +2,7 @@
 
 # the omnidirectional oligarch... the queen
 class Queen < Piece
-  attr_reader :name, :color, :position
+  attr_reader :name, :uni
 
   def initialize(color, position, board)
     @name = 'queen'
@@ -10,7 +10,7 @@ class Queen < Piece
     super(color, position, board)
   end
 
-  def valid_moves(board)
-    valid_omnidirectional_moves(board, @position, @color)
+  def valid_moves
+    valid_omnidirectional_moves(@position, @color)
   end
 end

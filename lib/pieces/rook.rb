@@ -2,7 +2,7 @@
 
 # the straight shooter... the rook
 class Rook < Piece
-  attr_reader :name, :color, :position
+  attr_reader :name, :uni
 
   def initialize(color, position, board)
     @name = 'rook'
@@ -10,7 +10,7 @@ class Rook < Piece
     super(color, position, board)
   end
 
-  def valid_moves(board)
-    valid_straight_moves(board, @position, @color)
+  def valid_moves
+    valid_straight_moves(@position, @color)
   end
 end

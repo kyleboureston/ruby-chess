@@ -2,7 +2,7 @@
 
 # the diagonol deviant... the bishop
 class Bishop < Piece
-  attr_reader :name, :color, :position
+  attr_reader :name, :uni
 
   def initialize(color, position, board)
     @name = 'bishop'
@@ -10,7 +10,7 @@ class Bishop < Piece
     super(color, position, board)
   end
 
-  def valid_moves(board)
-    valid_diagonol_moves(board, @position, @color)
+  def valid_moves
+    valid_diagonol_moves(@position, @color)
   end
 end

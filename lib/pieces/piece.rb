@@ -2,6 +2,9 @@
 
 # mixin to give all the pieces their actual movements.
 class Piece
+  attr_accessor :position
+  attr_reader :board, :color
+
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
   STRAIGHT_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1]].freeze
   KNIGHT_MOVES = [[2, 1], [2, -1], [-2, 1], [-2, -1], [1, 2], [1, -2], [-1, 2], [-1, -2]].freeze
@@ -17,19 +20,19 @@ class Piece
 
   private
 
-  def valid_diagonol_moves(board, position, color, response = [])
-    DIAGONOL_MOVES.each { |move| response << check_move_path(board, position, color, move) }
+  def valid_diagonol_moves(position, color, response = [])
+    DIAGONOL_MOVES.each { |move| response << check_move_path(@board.data, position, color, move) }
     flatten_to_2d(response.compact)
   end
 
-  def valid_straight_moves(board, position, color, response = [])
-    STRAIGHT_MOVES.each { |move| response << check_move_path(board, position, color, move) }
+  def valid_straight_moves(position, color, response = [])
+    STRAIGHT_MOVES.each { |move| response << check_move_path(@board.data, position, color, move) }
     flatten_to_2d(response.compact)
   end
 
-  def valid_omnidirectional_moves(board, position, color, response = [])
-    response << valid_diagonol_moves(board, position, color)
-    response << valid_straight_moves(board, position, color)
+  def valid_omnidirectional_moves(position, color, response = [])
+    response << valid_diagonol_moves(@board.data, position, color)
+    response << valid_straight_moves(@board.data, position, color)
     flatten_to_2d(response.compact)
   end
 
@@ -42,25 +45,25 @@ class Piece
   #                          [2] End the recursion,
   #                          [3] Do allow the new_pos to be added to the response
   #                             (as a square that contains a foe is a valid move)
-  def check_move_path(board, pos, color, move, response = [])
+  def check_move_path(pos, color, move, response = [])
     x, y = move
     new_pos = [pos[0] + x, pos[1] + y]
 
     return response if not_valid?(new_pos)
-    return response if not_blank?(board, new_pos) && contains_friend?(board, new_pos, color)
+    return response if not_blank?(new_pos) && contains_friend?(new_pos, color)
 
     response << new_pos
-    return response if not_blank?(board, new_pos) && contains_foe?(board, new_pos, color)
+    return response if not_blank?(new_pos) && contains_foe?(new_pos, color)
 
-    check_move_path(board, new_pos, color, move, response)
+    check_move_path(new_pos, color, move, response)
   end
 
-  def check_moves(board, pos, color, move)
+  def check_moves(pos, color, move)
     x, y = move
     new_pos = [pos[0] + x, pos[1] + y]
 
     return if not_valid?(new_pos)
-    return if not_blank?(board, new_pos) && contains_friend?(board, new_pos, color)
+    return if not_blank?(new_pos) && contains_friend?(new_pos, color)
 
     new_pos
   end
@@ -78,26 +81,28 @@ class Piece
     !x.between?(0, 7) || !y.between?(0, 7)
   end
 
-  def blank?(board, pos, x = pos[0], y = pos[1])
-    board[x].nil? || board[x][y].nil?
+  def blank?(pos, x = pos[0], y = pos[1])
+    @board.data[x].nil? || @board.data[x][y].nil?
   end
 
-  def not_blank?(board, pos, x = pos[0], y = pos[1])
-    !board[x].nil? && !board[x][y].nil?
+  def not_blank?(pos, x = pos[0], y = pos[1])
+    !@board.data[x].nil? && !@board.data[x][y].nil?
   end
 
-  def get_foe(board, pos, color, x = pos[0], y = pos[1])
-    piece = board[x][y]
+  def get_foe(pos, color, x = pos[0], y = pos[1])
+    piece = @board.data[x][y]
     piece.name if piece.color != color
   end
 
-  def contains_foe?(board, pos, color, x = pos[0], y = pos[1])
-    piece = board[x][y]
+  def contains_foe?(pos, color, x = pos[0], y = pos[1])
+    p pos
+    piece = @board.data[x][y]
+    p piece
     piece.color != color
   end
 
-  def contains_friend?(board, pos, color, x = pos[0], y = pos[1])
-    piece = board[x][y]
+  def contains_friend?(pos, color, x = pos[0], y = pos[1])
+    piece = @board.data[x][y]
     piece.color == color
   end
 end
