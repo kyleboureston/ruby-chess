@@ -2,11 +2,11 @@
 
 # the prince of puny and paltry... the pawn
 class Pawn < Piece
-  attr_reader :name, :uni
+  attr_reader :name, :char
 
   def initialize(color, position, board)
     @name = 'pawn'
-    @uni  = color == 'white' ? "\u2659" : "\u265F"
+    @char = color == 'white' ? "\u2659" : "\u265F"
     super(color, position, board)
   end
 
