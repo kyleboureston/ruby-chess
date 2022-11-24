@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'display/board'
+require_relative 'colors'
 
 # the one board to rule them all
 class Board
