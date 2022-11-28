@@ -8,8 +8,8 @@ class Piece
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
   STRAIGHT_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1]].freeze
   KNIGHT_MOVES = [[2, 1], [2, -1], [-2, 1], [-2, -1], [1, 2], [1, -2], [-1, 2], [-1, -2]].freeze
-  PAWN_ATTACKS_WHITE = [[1, 1], [1, -1]].freeze
-  PAWN_ATTACKS_BLACK = [[-1, -1], [-1, 1]].freeze
+  PAWN_ATTACKS_WHITE = [[-1, -1], [-1, 1]].freeze
+  PAWN_ATTACKS_BLACK = [[1, 1], [1, -1]].freeze
   KING_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
 
   def initialize(color, position, board)

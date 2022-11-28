@@ -19,6 +19,7 @@ class Game
     # sleep(2)
     create_board
     create_players
+    set_current_player
     play_turn until @current_player_king.check_mate?
     conclusion
   end
@@ -26,8 +27,6 @@ class Game
   def create_players
     @player1 = create_player(1, 'black')
     @player2 = create_player(2, 'white')
-    @current_player = @player2
-    @current_player_king = @board.get_king(@current_player.color)
   end
 
   def create_player(player_number, player_color)
@@ -42,7 +41,6 @@ class Game
   end
 
   def play_turn
-    next_player
     @board.display
 
     print_piece_to_move_input(@current_player)
@@ -54,12 +52,19 @@ class Game
 
     @board.move(piece, destination)
     print_king_in_check_message if @current_player_king.check?
+
+    next_player
   end
 
   private
 
   def clear_screen
     system 'clear'
+  end
+
+  def set_current_player
+    @current_player = @player1
+    @current_player_king = @board.get_king(@current_player.color)
   end
 
   def next_player

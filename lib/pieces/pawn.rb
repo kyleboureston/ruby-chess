@@ -20,7 +20,6 @@ class Pawn < Piece
     pos_x, pos_y = position
 
     # 1. PAWN'S ATTACKS
-    players_pawn_attacks = color == 'white' ? PAWN_ATTACKS_WHITE : PAWN_ATTACKS_BLACK
     players_pawn_attacks.each do |move|
       x, y = move
       next_move = [pos_x + x, pos_y + y]
@@ -30,8 +29,8 @@ class Pawn < Piece
     end
 
     # NORMAL PAWN MOVEMENTS
-    move1 = color == 'white' ? [pos_x + 1, pos_y] : [pos_x - 1, pos_y]
-    move2 = color == 'white' ? [pos_x + 2, pos_y] : [pos_x - 2, pos_y]
+    move1 = color == 'white' ? [pos_x - 1, pos_y] : [pos_x + 1, pos_y]
+    move2 = color == 'white' ? [pos_x - 2, pos_y] : [pos_x + 2, pos_y]
     if [1, 6].include?(pos_x) # [1, 6] are the starting rows
       response << move1 if valid?(move1) && blank?(move1)
       response << move2 if valid?(move2) && blank?(move2)
