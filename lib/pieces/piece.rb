@@ -18,6 +18,10 @@ class Piece
     @board    = board
   end
 
+  def update_position(destination)
+    self.position = destination
+  end
+
   private
 
   def valid_diagonol_moves(position, color, response = [])
