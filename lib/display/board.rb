@@ -19,10 +19,6 @@ module Display
       print_letter_legend
     end
 
-    def mark_selected(piece)
-      piece.mark_selected
-    end
-
     private
 
     def clear_screen
