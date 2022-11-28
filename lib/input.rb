@@ -26,7 +26,6 @@ module Input
     # Make sure that the piece selected is the player's piece
     if valid_input
       piece_array_notation = array_notation(piece_chess_notation)
-      p piece_array_notation
       valid_piece = player_piece_positions.include?(piece_array_notation)
       print_invalid_piece_warning unless valid_piece
     end
