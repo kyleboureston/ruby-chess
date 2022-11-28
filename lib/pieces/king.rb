@@ -19,6 +19,8 @@ class King < Piece
   end
 
   def check_mate?(options = 0)
+    return unless check?
+
     valid_king_moves(@position, @color).each do |move|
       x, y = move
       move_option = [@position[0] + x, @position[1] + y]
@@ -54,7 +56,8 @@ class King < Piece
 
   def pawn_check?(pos = @position, response = [])
     valid_attackers = ['pawn']
-    PAWN_ATTACK_MOVES.each { |move| response << check_attacks(pos, @color, move, valid_attackers) }
+    players_pawn_attacks = @color == 'white' ? PAWN_ATTACKS_BLACK : PAWN_ATTACKS_WHITE
+    players_pawn_attacks.each { |move| response << check_attacks(pos, @color, move, valid_attackers) }
     flatten_to_2d(response.compact).length.positive?
   end
 
