@@ -27,6 +27,10 @@ class Piece
     self.selected = true
   end
 
+  def mark_unselected
+    self.selected = false
+  end
+
   private
 
   def valid_diagonol_moves(position, color, response = [])

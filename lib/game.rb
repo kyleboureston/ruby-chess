@@ -45,13 +45,16 @@ class Game
 
     print_piece_to_move_input(@current_player)
     piece = player_piece_input(@current_player.piece_positions, @board) # returns the piece object
-    @board.mark_selected(piece)
+
+    piece.mark_selected
+    valid_moves = piece.valid_moves
+    @board.add_valid_moves(valid_moves)
     @board.display
 
-    valid_moves = piece.valid_moves
     print_piece_destination_input(valid_moves)
     destination = piece_destination_input(valid_moves)
 
+    piece.mark_unselected
     @board.move(piece, destination)
     print_king_in_check_message if @current_player_king.check?
 
