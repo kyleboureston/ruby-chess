@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'conversions'
 require_relative 'pieces/piece'
 require_relative 'pieces/bishop'
 require_relative 'pieces/queen'
