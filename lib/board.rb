@@ -36,6 +36,16 @@ class Board
     end
   end
 
+  def remove_valid_moves
+    @data.map! do |row|
+      row.map! do |piece|
+        next if piece.nil?
+
+        piece.name == 'valid_move' ? nil : piece
+      end
+    end
+  end
+
   private
 
   def generate_board(response = [])

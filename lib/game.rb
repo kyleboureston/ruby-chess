@@ -55,6 +55,7 @@ class Game
     destination = piece_destination_input(valid_moves)
 
     piece.mark_unselected
+    @board.remove_valid_moves
     @board.move(piece, destination)
     print_king_in_check_message if @current_player_king.check?
 
