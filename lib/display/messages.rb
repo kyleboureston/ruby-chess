@@ -4,6 +4,10 @@
 module Display
   # mixin for messages sent to user
   module Messages
+    def self.included(_base)
+      include Conversions
+    end
+
     def print_welcome_message
       puts 'Welcome to chess!'
       print_spacer
@@ -43,7 +47,8 @@ module Display
     end
 
     def print_piece_destination_input(valid_moves)
-      chess_notation_valid_moves = valid_moves.map { |move| "#{'ABCDEFGH'[move[1]]}#{move[0].to_i + 1}" }
+      p valid_moves
+      chess_notation_valid_moves = valid_moves.map { |move_array_notation| chess_notation(move_array_notation) }
       print_spacer
       puts "Where do you want to move it to? Valid moves = #{chess_notation_valid_moves.join(', ')}"
     end
