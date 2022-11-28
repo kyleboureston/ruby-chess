@@ -8,8 +8,8 @@ class Piece
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
   STRAIGHT_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1]].freeze
   KNIGHT_MOVES = [[2, 1], [2, -1], [-2, 1], [-2, -1], [1, 2], [1, -2], [-1, 2], [-1, -2]].freeze
-  PAWN_MOVES = [[1, 0], [2, 0]].freeze
-  PAWN_ATTACK_MOVES = [[1, 1], [1, -1]].freeze
+  PAWN_ATTACKS_WHITE = [[1, 1], [1, -1]].freeze
+  PAWN_ATTACKS_BLACK = [[-1, -1], [-1, 1]].freeze
   KING_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
 
   def initialize(color, position, board)
@@ -21,18 +21,18 @@ class Piece
   private
 
   def valid_diagonol_moves(position, color, response = [])
-    DIAGONOL_MOVES.each { |move| response << check_move_path(@board.data, position, color, move) }
+    DIAGONOL_MOVES.each { |move| response << check_move_path(position, color, move) }
     flatten_to_2d(response.compact)
   end
 
   def valid_straight_moves(position, color, response = [])
-    STRAIGHT_MOVES.each { |move| response << check_move_path(@board.data, position, color, move) }
+    STRAIGHT_MOVES.each { |move| response << check_move_path(position, color, move) }
     flatten_to_2d(response.compact)
   end
 
   def valid_omnidirectional_moves(position, color, response = [])
-    response << valid_diagonol_moves(@board.data, position, color)
-    response << valid_straight_moves(@board.data, position, color)
+    response << valid_diagonol_moves(position, color)
+    response << valid_straight_moves(position, color)
     flatten_to_2d(response.compact)
   end
 
@@ -95,9 +95,7 @@ class Piece
   end
 
   def contains_foe?(pos, color, x = pos[0], y = pos[1])
-    p pos
     piece = @board.data[x][y]
-    p piece
     piece.color != color
   end
 
