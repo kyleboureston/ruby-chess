@@ -2,7 +2,8 @@
 
 # Central to run the game itself
 class Game
-  include Check
+  include Input
+  include Display::Messages
 
   def initialize
     @board               = nil
@@ -13,9 +14,11 @@ class Game
   end
 
   def play
-    welcome_message
-    create_players
+    clear_screen
+    print_welcome_message
+    # sleep(2)
     create_board
+    create_players
     play_turn until @current_player_king.check_mate?
     conclusion
   end
@@ -24,43 +27,48 @@ class Game
     @player1 = create_player(1, 'black')
     @player2 = create_player(2, 'white')
     @current_player = @player2
+    @current_player_king = @board.get_king(@current_player.color)
   end
 
   def create_player(player_number, player_color)
-    puts display_player_name_prompt(player_number)
+    print_player_name_prompt(player_number)
     player_name = player_name_input
 
-    Player.new(player_name, player_color)
+    Player.new(player_name, player_color, @board)
+  end
+
+  def create_board
+    @board = Board.new
   end
 
   def play_turn
-    clear_screen
     next_player
-    board.display
+    @board.display
 
-    current = player_piece_input(player.name) # returns two coordinates (as an arr (ex: [3, 2]))
-    piece = get_piece(current)
+    print_piece_to_move_input(@current_player)
+    piece = player_piece_input(@current_player.piece_positions, @board) # returns the piece object
+
     valid_moves = piece.valid_moves
+    print_piece_destination_input(valid_moves)
+    destination = piece_destination_input(valid_moves)
 
-    destination = player_destination_input(player.name, valid_moves)
-    board.move(piece, current, destination)
-
-    display_king_in_check_message if @current_player_king.check?(board)
+    @board.move(piece, destination)
+    print_king_in_check_message if @current_player_king.check?
   end
 
   private
-
-  def next_player
-    next_player = @current_player == @player1 ? @player2 : @player1
-    @current_player = next_player
-    @current_player_king = board.get_king(next_player)
-  end
 
   def clear_screen
     system 'clear'
   end
 
+  def next_player
+    next_player = @current_player == @player1 ? @player2 : @player1
+    @current_player = next_player
+    @current_player_king = @board.get_king(@current_player.color)
+  end
+
   def conclusion
-    display_game_winner_message()
+    print_game_winner_message
   end
 end
