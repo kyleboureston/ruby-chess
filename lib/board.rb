@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'display/board'
-require_relative 'colors'
-
 # the one board to rule them all
 class Board
   include Display::Board
@@ -10,15 +7,25 @@ class Board
 
   def initialize
     @data = generate_board
+    p @data
   end
 
-  def move
-    remove(piece, current)
+  def move(piece, destination)
+    remove(piece)
     add(piece, destination)
   end
 
   def get_king(color)
-    @board_arr.select { |piece| piece.name == 'king' && piece.color == color }
+    @data.flatten.select do |piece|
+      next if piece.nil?
+
+      piece.name == 'king' && piece.color == color
+    end.first
+  end
+
+  def get_piece(piece_position)
+    row, col = piece_position
+    @data[row][col]
   end
 
   private
@@ -59,11 +66,18 @@ class Board
     Array.new(8) { nil }
   end
 
-  def remove(piece, current)
-
+  def remove(piece)
+    @data.map do |row|
+      row.map { |cell| nil if cell == piece } # Return nil if the cell is the same as piece
+    end
   end
 
-  def add(piece, current)
-
+  # For reference, this takes care of movement to a blank square and to one with a foe
+  def add(piece, destination)
+    p piece.name
+    p piece.color
+    p destination
+    col, row = destination
+    @data[row][col] = piece
   end
 end
