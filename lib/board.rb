@@ -12,6 +12,7 @@ class Board
   def move(piece, destination)
     remove(piece)
     add(piece, destination)
+    piece.update_position(destination)
   end
 
   def get_king(color)
@@ -25,6 +26,14 @@ class Board
   def get_piece(piece_position)
     row, col = piece_position
     @data[row][col]
+  end
+
+  # valid_moves is an array of valid-move arrays (ex: [[0, 0], [2, 4], [1, 3]])
+  def add_valid_moves(valid_moves)
+    valid_moves.each do |valid_move|
+      row, col = valid_move
+      @data[row][col] = ValidMove.new('red', valid_move, self)
+    end
   end
 
   private
@@ -71,7 +80,7 @@ class Board
         next if piece.nil?
 
         piece.position == piece_to_remove.position ? nil : piece
-      end # Return nil if the cell is the same as piece
+      end
     end
   end
 

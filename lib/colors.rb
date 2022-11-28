@@ -2,7 +2,7 @@
 
 # monkey patch String class to colorize text
 class String
-    def black;               "\e[30m#{self}\e[0m" end
+    def black;                "\e[30m#{self}\e[0m" end
     def red;                  "\e[31m#{self}\e[0m" end
     def green;                "\e[32m#{self}\e[0m" end
     def yellow;               "\e[33m#{self}\e[0m" end
@@ -13,7 +13,7 @@ class String
 
     def bg_white;             "\e[47m#{self}\e[0m" end
     def bg_blue;              "\e[46m#{self}\e[0m" end
-    def bg_red;              "\e[41m#{self}\e[0m" end
+    def bg_red;               "\e[41m#{self}\e[0m" end
 
     def bold;                 "\e[1m#{self}\e[22m" end
     def italic;               "\e[3m#{self}\e[23m" end

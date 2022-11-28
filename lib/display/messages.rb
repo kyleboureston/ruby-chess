@@ -47,10 +47,9 @@ module Display
     end
 
     def print_piece_destination_input(valid_moves)
-      p valid_moves
       chess_notation_valid_moves = valid_moves.map { |move_array_notation| chess_notation(move_array_notation) }
       print_spacer
-      puts "Where do you want to move it to? Valid moves = #{chess_notation_valid_moves.join(', ')}"
+      puts "Where do you want to move it to? Valid moves (marked with \e[31m\u25CF\e[0m above) = #{chess_notation_valid_moves.join(', ')}"
     end
 
     def print_invalid_destination_warning
