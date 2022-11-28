@@ -20,6 +20,7 @@ class Pawn < Piece
     pos_x, pos_y = position
 
     # 1. PAWN'S ATTACKS
+    players_pawn_attacks = color == 'white' ? PAWN_ATTACKS_WHITE : PAWN_ATTACKS_BLACK
     players_pawn_attacks.each do |move|
       x, y = move
       next_move = [pos_x + x, pos_y + y]
