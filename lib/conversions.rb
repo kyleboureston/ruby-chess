@@ -14,7 +14,7 @@ module Conversions
     # [1] Swap col and row
     col, row = chess_notation.split('')
     # [2] Convert col to number (already zero-base indexed)
-    col = 'ABCDEFGH'.index(col.upcase)
+    col = 'abcdefgh'.index(col.downcase)
     # [3] Convert row to zero-based indexing
     # AND
     # [4] Convert the row to print in array notation order
