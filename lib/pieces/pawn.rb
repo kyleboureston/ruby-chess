@@ -17,21 +17,22 @@ class Pawn < Piece
   private
 
   def valid_pawn_moves(position, color, response = [])
-    position_x, position_y = position
+    pos_x, pos_y = position
 
-    # FIRST TAKE CARE OF THE PAWN'S ATTACKS
-    PAWN_ATTACK_MOVES.each do |move|
+    # 1. PAWN'S ATTACKS
+    players_pawn_attacks = color == 'white' ? PAWN_ATTACKS_WHITE : PAWN_ATTACKS_BLACK
+    players_pawn_attacks.each do |move|
       x, y = move
-      next_move = [position_x + x, position_y + y]
+      next_move = [pos_x + x, pos_y + y]
       next if not_valid?(next_move) || blank?(next_move) || contains_friend?(next_move, color)
 
       response << next_move
     end
 
-    # THEN THE NORMAL PAWN MOVEMENTS
-    move1 = [position_x + 1, position_y]
-    move2 = [position_x + 2, position_y]
-    if position_x == 1 # This is the starting row
+    # NORMAL PAWN MOVEMENTS
+    move1 = color == 'white' ? [pos_x + 1, pos_y] : [pos_x - 1, pos_y]
+    move2 = color == 'white' ? [pos_x + 2, pos_y] : [pos_x - 2, pos_y]
+    if [1, 6].include?(pos_x) # [1, 6] are the starting rows
       response << move1 if valid?(move1) && blank?(move1)
       response << move2 if valid?(move2) && blank?(move2)
     else
