@@ -2,11 +2,11 @@
 
 # the omnidirectional oligarch... the queen
 class Queen < Piece
-  attr_reader :name, :char
+  attr_reader :name, :character
 
   def initialize(color, position, board)
     @name = 'queen'
-    @char = color == 'white' ? "\u2655" : "\u265B"
+    @character = color == 'white' ? "\u2655" : "\u265B"
     super(color, position, board)
   end
 

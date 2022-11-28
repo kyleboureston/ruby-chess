@@ -2,11 +2,11 @@
 
 # the straight shooter... the rook
 class Rook < Piece
-  attr_reader :name, :char
+  attr_reader :name, :character
 
   def initialize(color, position, board)
     @name = 'rook'
-    @char = color == 'white' ? "\u2656" : "\u265C"
+    @character = color == 'white' ? "\u2656" : "\u265C"
     super(color, position, board)
   end
 

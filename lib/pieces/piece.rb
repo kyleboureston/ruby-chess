@@ -2,7 +2,7 @@
 
 # mixin to give all the pieces their actual movements.
 class Piece
-  attr_accessor :position
+  attr_accessor :position, :selected
   attr_reader :board, :color
 
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
@@ -13,6 +13,7 @@ class Piece
   KING_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
 
   def initialize(color, position, board)
+    @selected = false
     @color    = color
     @position = position
     @board    = board
@@ -20,6 +21,10 @@ class Piece
 
   def update_position(destination)
     self.position = destination
+  end
+
+  def mark_selected
+    self.selected = true
   end
 
   private

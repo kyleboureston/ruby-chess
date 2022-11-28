@@ -2,11 +2,11 @@
 
 # the L of lawlessness... the knight
 class Knight < Piece
-  attr_reader :name, :char
+  attr_reader :name, :character
 
   def initialize(color, position, board)
     @name = 'knight'
-    @char = color == 'white' ? "\u2658" : "\u265E"
+    @character = color == 'white' ? "\u2658" : "\u265E"
     super(color, position, board)
   end
 

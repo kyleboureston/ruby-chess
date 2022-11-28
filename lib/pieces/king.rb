@@ -2,11 +2,11 @@
 
 # the kismet of kindness... the king
 class King < Piece
-  attr_reader :name, :char
+  attr_reader :name, :character
 
   def initialize(color, position, board)
     @name = 'king'
-    @char = color == 'white' ? "\u2654" : "\u265A"
+    @character = color == 'white' ? "\u2654" : "\u265A"
     super(color, position, board)
   end
 

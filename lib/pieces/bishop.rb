@@ -2,11 +2,11 @@
 
 # the diagonol deviant... the bishop
 class Bishop < Piece
-  attr_reader :name, :char
+  attr_reader :name, :character
 
   def initialize(color, position, board)
     @name = 'bishop'
-    @char = color == 'white' ? "\u2657" : "\u265D"
+    @character = color == 'white' ? "\u2657" : "\u265D"
     super(color, position, board)
   end
 
