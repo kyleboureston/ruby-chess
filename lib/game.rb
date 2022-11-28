@@ -45,6 +45,8 @@ class Game
 
     print_piece_to_move_input(@current_player)
     piece = player_piece_input(@current_player.piece_positions, @board) # returns the piece object
+    @board.mark_selected(piece)
+    @board.display
 
     valid_moves = piece.valid_moves
     print_piece_destination_input(valid_moves)

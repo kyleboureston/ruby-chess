@@ -5,11 +5,11 @@ module Display
   # mixin for displaying the board itself
   module Board
     def self.included(_base)
-      include Display::Messages
+      include Conversions
     end
 
     def display
-      # clear_screen
+      clear_screen
       print_letter_legend
       @data.each.with_index do |row, row_index|
         print_row_num_before(row_index)
@@ -19,37 +19,30 @@ module Display
       print_letter_legend
     end
 
+    def mark_selected(piece)
+      piece.mark_selected
+    end
+
     private
 
     def clear_screen
       system 'clear'
     end
 
-    def print_board_arr
-      @data.each.with_index do |row, index|
-        puts
-        pieces_in_row = row.reject(&:nil?).count.positive?
-        if pieces_in_row
-          puts "--- ROW ##{index + 1} ---"
-          row.each { |piece| print "#{piece.color} #{piece.name}, " }
-        else
-          puts
-        end
-      end
-    end
-
     def print_row(row, row_index)
       row.each.with_index do |cell, cell_index|
-        char = cell.char unless cell.nil?
-        cell.nil? ? print_blank(row_index, cell_index) : print_char(row_index, cell_index, char)
+        piece = cell unless cell.nil?
+        cell.nil? ? print_blank(row_index, cell_index) : print_character(piece, piece.character, row_index, cell_index)
       end
     end
 
-    def print_char(row_index, cell_index, char)
-      if row_index.odd?
-        print cell_index.odd? ? " #{char} ".bg_blue : " #{char} ".bg_white
+    def print_character(piece, character, row_index, cell_index)
+      if piece.selected
+        print " #{character} ".bg_red
+      elsif row_index.odd?
+        print cell_index.odd? ? " #{character} ".bg_blue : " #{character} ".bg_white
       else
-        print cell_index.even? ? " #{char} ".bg_blue : " #{char} ".bg_white
+        print cell_index.even? ? " #{character} ".bg_blue : " #{character} ".bg_white
       end
     end
 
