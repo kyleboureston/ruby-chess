@@ -17,6 +17,7 @@ module Display
         print_row_num_after(row_index)
       end
       print_letter_legend
+      print_king_in_check_message(player.name) if @player_in_check
     end
 
     private
@@ -35,7 +36,7 @@ module Display
     def print_character(piece, character, row_index, cell_index)
       if piece.selected
         print " #{character} ".bg_red
-      elsif row_index.odd?
+      elsif row_index.even?
         print cell_index.odd? ? " #{character} ".bg_blue : " #{character} ".bg_white
       else
         print cell_index.even? ? " #{character} ".bg_blue : " #{character} ".bg_white
@@ -43,7 +44,7 @@ module Display
     end
 
     def print_blank(row_index, cell_index)
-      if row_index.odd?
+      if row_index.even?
         print cell_index.odd? ? '   '.bg_blue : '   '.bg_white
       else
         print cell_index.even? ? '   '.bg_blue : '   '.bg_white
