@@ -5,11 +5,12 @@ module Display
   # mixin for displaying the board itself
   module Board
     def self.included(_base)
-      include Conversions
+      include Conversions, Display::Messages
     end
 
     def display
       clear_screen
+      print_spacer
       print_letter_legend
       @data.each.with_index do |row, row_index|
         print_row_num_before(row_index)
@@ -17,7 +18,8 @@ module Display
         print_row_num_after(row_index)
       end
       print_letter_legend
-      print_king_in_check_message(player.name) if @player_in_check
+
+      print_king_in_check_message(@player_in_check.name) if @player_in_check
     end
 
     private
@@ -37,9 +39,17 @@ module Display
       if piece.selected
         print " #{character} ".bg_red
       elsif row_index.even?
-        print cell_index.odd? ? " #{character} ".bg_blue : " #{character} ".bg_white
+        if piece.under_attack
+          print cell_index.odd? ? " #{character} ".red.bg_blue : " #{character} ".red.bg_white
+        else
+          print cell_index.odd? ? " #{character} ".bg_blue : " #{character} ".bg_white
+        end
       else
-        print cell_index.even? ? " #{character} ".bg_blue : " #{character} ".bg_white
+        if piece.under_attack
+          print cell_index.even? ? " #{character} ".red.bg_blue : " #{character} ".red.bg_white
+        else
+          print cell_index.even? ? " #{character} ".bg_blue : " #{character} ".bg_white
+        end
       end
     end
 
