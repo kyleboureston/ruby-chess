@@ -42,24 +42,20 @@ class Game
 
   def play_turn
     @board.display
-
+    # Get the piece the player wants to move
     print_piece_to_move_input(@current_player)
     piece = player_piece_input(@current_player.piece_positions, @board) # returns the piece object
-
-    piece.mark_selected
     valid_moves = piece.valid_moves
-    @board.add_valid_moves(valid_moves)
-    @board.display
-
-    print_piece_destination_input(valid_moves)
+    # Mark this piece as selected and show the valid moves for the piece
+    update_board_with_selected(piece, valid_moves)
+    # Get the destiation that the player wants to move the selected piece
+    print_piece_destination_input(piece, valid_moves)
     destination = piece_destination_input(valid_moves)
-
-    piece.mark_unselected
-    @board.remove_valid_moves
-    @board.move(piece, destination)
-    print_king_in_check_message if @current_player_king.check?
-
+    # Unselect the piece, remove the valid moves from board, and move the piece
+    move_piece(piece, destination)
     next_player
+
+    @current_player_king.check? ? @board.add_player_in_check(@current_player) : @board.remove_player_in_check
   end
 
   private
@@ -77,6 +73,18 @@ class Game
     next_player = @current_player == @player1 ? @player2 : @player1
     @current_player = next_player
     @current_player_king = @board.get_king(@current_player.color)
+  end
+
+  def update_board_with_selected(piece, valid_moves)
+    piece.mark_selected
+    @board.add_valid_moves(valid_moves)
+    @board.display
+  end
+
+  def move_piece(piece, destination)
+    piece.mark_unselected
+    @board.remove_valid_moves
+    @board.move(piece, destination)
   end
 
   def conclusion

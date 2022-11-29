@@ -46,18 +46,19 @@ module Display
       puts 'Please try again. You must select a square that has your piece.'
     end
 
-    def print_piece_destination_input(valid_moves)
+    def print_piece_destination_input(piece, valid_moves)
       chess_notation_valid_moves = valid_moves.map { |move_array_notation| chess_notation(move_array_notation) }
       print_spacer
-      puts "Where do you want to move it to? Valid moves (marked with \e[31m\u25CF\e[0m above) = #{chess_notation_valid_moves.join(', ')}"
+      puts "Where do you want to move your #{piece.name} to? Valid moves = #{chess_notation_valid_moves.join(', ')} (marked with \e[31m\u25CF\e[0m above)"
     end
 
     def print_invalid_destination_warning
       puts 'Please try again. This piece cannot move to the destination you entered.'
     end
 
-    def print_king_in_check_message
-      'Hey, your king is in check. Things just got REAL!'
+    def print_king_in_check_message(player_name)
+      print_spacer
+      puts "\e[31mWarning:\e[0m #{player_name} your king is in check. Your next move must protect your king!"
     end
 
     def dprint_game_winner_message

@@ -6,7 +6,8 @@ class Board
   attr_reader :data
 
   def initialize
-    @data = generate_board
+    @data            = generate_board
+    @player_in_check = false
   end
 
   def move(piece, destination)
@@ -28,11 +29,24 @@ class Board
     @data[row][col]
   end
 
+  def add_player_in_check(player)
+    @player_in_check = player
+  end
+
+  def remove_player_in_check
+    @player_in_check = nil
+  end
+
   # valid_moves is an array of valid-move arrays (ex: [[0, 0], [2, 4], [1, 3]])
   def add_valid_moves(valid_moves)
     valid_moves.each do |valid_move|
       row, col = valid_move
-      @data[row][col] = ValidMove.new('red', valid_move, self)
+      if @data[row][col].nil?
+        @data[row][col] = ValidMove.new('red', valid_move, self)
+      else
+        piece = @data[row][col]
+        piece.set_under_attack
+      end
     end
   end
 
@@ -41,6 +55,7 @@ class Board
       row.map! do |piece|
         next if piece.nil?
 
+        piece.set_safe
         piece.name == 'valid_move' ? nil : piece
       end
     end
@@ -73,10 +88,10 @@ class Board
 
   def create_major_row(color, row)
     [
-      Rook.new(color, [row, 0], self), Bishop.new(color, [row, 1], self),
-      Knight.new(color, [row, 2], self), King.new(color, [row, 3], self),
-      Queen.new(color, [row, 4], self), Knight.new(color, [row, 5], self),
-      Bishop.new(color, [row, 6], self), Rook.new(color, [row, 7], self)
+      Rook.new(color, [row, 0], self), Knight.new(color, [row, 1], self),
+      Bishop.new(color, [row, 2], self), Queen.new(color, [row, 3], self),
+      King.new(color, [row, 4], self), Bishop.new(color, [row, 5], self),
+      Knight.new(color, [row, 6], self), Rook.new(color, [row, 7], self)
     ]
   end
 

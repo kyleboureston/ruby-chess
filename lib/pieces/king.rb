@@ -21,6 +21,10 @@ class King < Piece
   def check_mate?(options = 0)
     return unless check?
 
+    # NEED TO CHECK:
+    # [1] THE PLACES THE KING CAN MOVE
+    # [2] IF ANYONE CAN MOVE IN FRONT OF THE KING
+    # [3] IF ANYONE CAN ATTACK THE PIECE ATTACKING THE KING
     valid_king_moves(@position, @color).each do |move|
       x, y = move
       move_option = [@position[0] + x, @position[1] + y]

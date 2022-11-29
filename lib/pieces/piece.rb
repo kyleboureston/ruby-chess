@@ -2,7 +2,7 @@
 
 # mixin to give all the pieces their actual movements.
 class Piece
-  attr_accessor :position, :selected
+  attr_accessor :position, :selected, :under_attack
   attr_reader :board, :color
 
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
@@ -13,10 +13,11 @@ class Piece
   KING_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
 
   def initialize(color, position, board)
-    @selected = false
-    @color    = color
-    @position = position
-    @board    = board
+    @selected     = false
+    @under_attack = false
+    @color        = color
+    @position     = position
+    @board        = board
   end
 
   def update_position(destination)
@@ -29,6 +30,14 @@ class Piece
 
   def mark_unselected
     self.selected = false
+  end
+
+  def set_under_attack
+    self.under_attack = true
+  end
+
+  def set_safe
+    self.under_attack = false
   end
 
   private
@@ -87,6 +96,7 @@ class Piece
   end
 
   def valid?(pos, x = pos[0], y = pos[1])
+
     x.between?(0, 7) && y.between?(0, 7)
   end
 
