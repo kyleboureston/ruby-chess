@@ -10,7 +10,7 @@ class Queen < Piece
     super(color, position, board)
   end
 
-  def valid_moves
-    valid_omnidirectional_moves(@position, @color)
+  def find_valid_moves
+    @valid_moves = valid_omnidirectional_moves(@position, @color)
   end
 end

@@ -17,7 +17,7 @@ class Game
     clear_screen
     print_welcome_message
     # sleep(2)
-    create_board
+    setup_board
     create_players
     set_current_player
     play_turn until @current_player_king.check_mate?
@@ -36,8 +36,11 @@ class Game
     Player.new(player_name, player_color, @board)
   end
 
-  def create_board
+  def setup_board
+    # create a blank board
     @board = Board.new
+    # add the pieces to the board
+    @board.setup
   end
 
   def play_turn
@@ -82,9 +85,9 @@ class Game
   end
 
   def move_piece(piece, destination)
-    piece.mark_unselected
     @board.remove_valid_moves
     @board.move(piece, destination)
+    piece.update(destination)
   end
 
   def conclusion

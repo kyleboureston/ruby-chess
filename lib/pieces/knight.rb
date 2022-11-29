@@ -10,8 +10,8 @@ class Knight < Piece
     super(color, position, board)
   end
 
-  def valid_moves
-    valid_knight_moves(@position, @color)
+  def find_valid_moves
+    @valid_moves = valid_knight_moves(@position, @color)
   end
 
   private

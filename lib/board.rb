@@ -6,14 +6,26 @@ class Board
   attr_reader :data
 
   def initialize
-    @data            = generate_board
+    @data            = nil
     @player_in_check = false
+  end
+
+  def setup
+    # add the pieces to the board
+    @data = generate_board
+    # Add the valid_moves to each piece
+    @data.each do |row|
+      row.each do |square|
+        next if square.nil?
+
+        square.find_valid_moves
+      end
+    end
   end
 
   def move(piece, destination)
     remove(piece)
     add(piece, destination)
-    piece.update_position(destination)
   end
 
   def get_king(color)
@@ -41,8 +53,10 @@ class Board
   def add_valid_moves(valid_moves)
     valid_moves.each do |valid_move|
       row, col = valid_move
+      # If square is blank, add your valid move placeholder
       if @data[row][col].nil?
-        @data[row][col] = ValidMove.new('red', valid_move, self)
+        @data[row][col] = ValidMovePlaceholder.new('red', valid_move, self)
+      # If square contains a foe, set the foe under attack
       else
         piece = @data[row][col]
         piece.set_under_attack

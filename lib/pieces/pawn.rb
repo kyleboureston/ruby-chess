@@ -10,8 +10,8 @@ class Pawn < Piece
     super(color, position, board)
   end
 
-  def valid_moves
-    valid_pawn_moves(@position, @color)
+  def find_valid_moves
+    @valid_moves = valid_pawn_moves(@position, @color)
   end
 
   private

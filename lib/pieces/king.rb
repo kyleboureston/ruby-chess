@@ -10,8 +10,8 @@ class King < Piece
     super(color, position, board)
   end
 
-  def valid_moves
-    valid_king_moves(@position, @color)
+  def find_valid_moves
+    @valid_moves = valid_king_moves(@position, @color)
   end
 
   def check?(pos = @position)

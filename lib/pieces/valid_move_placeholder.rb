@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Used for visually displaying valid moves to player
-class ValidMove < Piece
+class ValidMovePlaceholder < Piece
   attr_reader :name, :character
 
   def initialize(color, position, board)

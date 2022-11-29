@@ -10,7 +10,7 @@ class Bishop < Piece
     super(color, position, board)
   end
 
-  def valid_moves
-    valid_diagonol_moves(@position, @color)
+  def find_valid_moves
+    @valid_moves = valid_diagonol_moves(@position, @color)
   end
 end

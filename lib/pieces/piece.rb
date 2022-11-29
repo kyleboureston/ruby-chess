@@ -2,7 +2,7 @@
 
 # mixin to give all the pieces their actual movements.
 class Piece
-  attr_accessor :position, :selected, :under_attack
+  attr_accessor :position, :selected, :under_attack, :valid_moves
   attr_reader :board, :color
 
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
@@ -15,13 +15,16 @@ class Piece
   def initialize(color, position, board)
     @selected     = false
     @under_attack = false
+    @valid_moves  = nil
     @color        = color
     @position     = position
     @board        = board
   end
 
-  def update_position(destination)
-    self.position = destination
+  def update(destination)
+    mark_unselected
+    update_position(destination)
+    find_valid_moves
   end
 
   def mark_selected
@@ -96,7 +99,6 @@ class Piece
   end
 
   def valid?(pos, x = pos[0], y = pos[1])
-
     x.between?(0, 7) && y.between?(0, 7)
   end
 
@@ -125,5 +127,9 @@ class Piece
   def contains_friend?(pos, color, x = pos[0], y = pos[1])
     piece = @board.data[x][y]
     piece.color == color
+  end
+
+  def update_position(destination)
+    self.position = destination
   end
 end

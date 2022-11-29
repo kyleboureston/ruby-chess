@@ -29,35 +29,35 @@ module Display
     end
 
     def print_row(row, row_index)
-      row.each.with_index do |cell, cell_index|
-        piece = cell unless cell.nil?
-        cell.nil? ? print_blank(row_index, cell_index) : print_character(piece, piece.character, row_index, cell_index)
+      row.each.with_index do |square, square_index|
+        piece = square unless square.nil?
+        square.nil? ? print_blank(row_index, square_index) : print_character(piece, piece.character, row_index, square_index)
       end
     end
 
-    def print_character(piece, character, row_index, cell_index)
+    def print_character(piece, character, row_index, square_index)
       if piece.selected
         print " #{character} ".bg_red
       elsif row_index.even?
         if piece.under_attack
-          print cell_index.odd? ? " #{character} ".red.bg_blue : " #{character} ".red.bg_white
+          print square_index.odd? ? " #{character} ".red.bg_blue : " #{character} ".red.bg_white
         else
-          print cell_index.odd? ? " #{character} ".bg_blue : " #{character} ".bg_white
+          print square_index.odd? ? " #{character} ".bg_blue : " #{character} ".bg_white
         end
       else
         if piece.under_attack
-          print cell_index.even? ? " #{character} ".red.bg_blue : " #{character} ".red.bg_white
+          print square_index.even? ? " #{character} ".red.bg_blue : " #{character} ".red.bg_white
         else
-          print cell_index.even? ? " #{character} ".bg_blue : " #{character} ".bg_white
+          print square_index.even? ? " #{character} ".bg_blue : " #{character} ".bg_white
         end
       end
     end
 
-    def print_blank(row_index, cell_index)
+    def print_blank(row_index, square_index)
       if row_index.even?
-        print cell_index.odd? ? '   '.bg_blue : '   '.bg_white
+        print square_index.odd? ? '   '.bg_blue : '   '.bg_white
       else
-        print cell_index.even? ? '   '.bg_blue : '   '.bg_white
+        print square_index.even? ? '   '.bg_blue : '   '.bg_white
       end
     end
 
