@@ -11,9 +11,9 @@ module Display
     def print_welcome_message
       puts 'Welcome to chess!'
       print_spacer
-      puts "Chess is a two-player turn-based board game. Each turn, a player can move one piece of their color. A player wins by putting their oponent's king in check mate."
+      puts "Chess is a two-player turn-based board game. Each turn, a player can move one piece of their color. A player wins by putting their oponent's king in check mate. Check mate is when a king has no available moves."
       print_spacer
-      puts "Let's play!"
+      puts "Ready to play? Let's start with names..."
     end
 
     def print_player_name_prompt(player_number)
@@ -23,27 +23,49 @@ module Display
 
     def print_player_name_warning
       print_spacer
-      puts 'Please try again. Enter letters and numbers only.'
+      puts "\e[31m#ERR:\e[0m Invalid name. Please enter letters and numbers only."
+    end
+
+    def print_game_prompt(player)
+      print_whose_turn_it_is_anyway(player)
+      print_king_in_check_message(player.name) unless player.king.check_positions.length.zero?
+      print_available_moves_message(player)
+    end
+
+    def print_whose_turn_it_is_anyway(player)
+      print_spacer
+      puts "#{player.name.upcase}'S TURN (#{player.color} pieces)".bold.underline
     end
 
     def print_piece_to_move_input(player)
-      print_spacer
-      puts "#{player.name}, what piece do you want to move (you are #{player.color})"
+      2.times { print_spacer }
+      puts 'What piece do you want to move?'
     end
 
     def print_invalid_input_warning
       print_spacer
-      puts 'Please try again. Enter a letter A-H, then a number 1-8.'
+      puts "\e[31m#ERR:\e[0m Invalid input. Please enter a letter a-h, then a number 1-8 (ex: a2)."
+    end
+
+    def print_available_moves_message(player)
+      print_spacer
+      puts 'Here are all of your pieces that currently have valid moves:'
+      print_spacer
+      player.find_pieces.each do |piece|
+        if piece.valid_moves.length.positive?
+          print piece.position.sum.even? ? " #{piece.character} ".bg_white : " #{piece.character} ".bg_blue
+        end
+      end
     end
 
     def print_no_available_moves_warning
       print_spacer
-      puts 'This piece has no available moves. Please enter a different piece.'
+      puts "\e[31m#ERR:\e[0m This piece has no available moves. Please enter a different piece."
     end
 
     def print_invalid_piece_warning
       print_spacer
-      puts 'Please try again. You must select a square that has your piece.'
+      puts "\e[31m#ERR:\e[0m This is not your piece. You must select a square that has your piece. Please enter a new square."
     end
 
     def print_piece_destination_input(piece, valid_moves)
@@ -53,12 +75,12 @@ module Display
     end
 
     def print_invalid_destination_warning
-      puts 'Please try again. This piece cannot move to the destination you entered.'
+      puts "\e[31m#ERR:\e[0m This piece cannot move to the destination you entered. Please enter a new destination."
     end
 
     def print_king_in_check_message(player_name)
       print_spacer
-      puts "\e[31mWarning:\e[0m #{player_name} your king is in check. Your next move must protect your king!"
+      puts "\e[31mWARNING:\e[0m #{player_name} your king is in check. Your next move must protect your king!"
     end
 
     def print_game_winner_message(losing_player, winning_player)
@@ -69,12 +91,12 @@ module Display
     end
 
     def print_play_again_message
-      print_spacer
+      3.times { print_spacer }
       puts 'Want to play again? Enter Y/N.'
     end
 
     def print_play_again_warning
-      puts 'Please try again. Enter Y or N.'
+      puts "\e[31m#ERR:\e[0m Invalid input. Please enter Y or N."
     end
 
     def print_loading_board_message
