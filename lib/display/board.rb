@@ -26,6 +26,10 @@ module Display
       system 'clear'
     end
 
+    def print_spacer
+      puts
+    end
+
     def print_row(row, row_index)
       row.each.with_index do |square, square_index|
         piece = square unless square.nil?
