@@ -39,7 +39,7 @@ module Display
       puts "#{player.name.upcase}'S TURN (#{player.color} pieces)".bold.underline
     end
 
-    def print_piece_to_move_input(player)
+    def print_piece_to_move_input
       2.times { print_spacer }
       puts 'What piece do you want to move?'
     end
