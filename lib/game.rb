@@ -51,7 +51,7 @@ class Game
     @board.display
     print_game_prompt(@current_player)
     # Get the piece the player wants to move
-    print_piece_to_move_input(@current_player)
+    print_piece_to_move_input
     piece = player_piece_input(@current_player.piece_positions, @board) # returns a piece object
     valid_moves = piece.valid_moves
     # Mark this piece as selected and show the valid moves for the piece
