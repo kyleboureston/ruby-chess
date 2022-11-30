@@ -10,23 +10,25 @@ class Game
     @player1             = nil
     @player2             = nil
     @current_player      = nil
-    @current_player_king = nil
   end
 
   def play
     clear_screen
     print_welcome_message
-    # sleep(2)
+    sleep(2)
     setup_board
-    create_players
-    set_current_player
-    play_turn until @current_player_king.check_mate?
-    conclusion
+    setup_players
+    update_pieces_valid_moves
+    print_loading_board_message
+    play_turn while @current_player.king.check_mate_positions.nil?
+    conclusion(@current_player, next_player)
   end
 
-  def create_players
+  def setup_players
     @player1 = create_player(1, 'black')
     @player2 = create_player(2, 'white')
+    set_current_player
+    set_players_kings
   end
 
   def create_player(player_number, player_color)
@@ -56,9 +58,9 @@ class Game
     destination = piece_destination_input(valid_moves)
     # Unselect the piece, remove the valid moves from board, and move the piece
     move_piece(piece, destination)
-    next_player
 
-    @current_player_king.check? ? @board.add_player_in_check(@current_player) : @board.remove_player_in_check
+    next_player
+    check_on_king
   end
 
   private
@@ -67,15 +69,20 @@ class Game
     system 'clear'
   end
 
+  def set_players_kings
+    @player1.set_king
+    @player2.set_king
+  end
+
   def set_current_player
     @current_player = @player1
-    @current_player_king = @board.get_king(@current_player.color)
   end
 
   def next_player
     next_player = @current_player == @player1 ? @player2 : @player1
     @current_player = next_player
-    @current_player_king = @board.get_king(@current_player.color)
+    @current_player.king = @board.get_king(@current_player.color)
+    @current_player
   end
 
   def update_board_with_selected(piece, valid_moves)
@@ -85,12 +92,35 @@ class Game
   end
 
   def move_piece(piece, destination)
+    # remove the ValidMovePlaceholders and remove color off of 'under_attack' players
     @board.remove_valid_moves
+    # move the player on the board itself to the destination
     @board.move(piece, destination)
+    # update the piece's data
     piece.update(destination)
+    # update the valid_moves of all the pieces
+    update_pieces_valid_moves
   end
 
-  def conclusion
-    print_game_winner_message
+  def update_pieces_valid_moves
+    @board.update_valid_moves
+  end
+
+  def check_on_king
+    @current_player.king.update_check_positions
+    check_positions = @current_player.king.check_positions
+    check_positions.nil? ? @board.no_players_in_check : @board.add_player_in_check(@current_player)
+  end
+
+  def conclusion(losing_player, winning_player)
+    @board.display
+    print_game_winner_message(losing_player, winning_player)
+    print_play_again_message
+    play_again = play_again_input
+    if play_again == 'Y'
+      Game.new.play
+    else
+      5.times { print_spacer }
+    end
   end
 end
