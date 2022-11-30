@@ -61,4 +61,12 @@ module Input
 
     piece_destination_input(valid_moves)
   end
+
+  def play_again_input
+    yes_or_no = gets.chomp
+    return yes_or_no if yes_or_no.match(/[YN]/i)
+
+    print_play_again_warning
+    play_again_input
+  end
 end
