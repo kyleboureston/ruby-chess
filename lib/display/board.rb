@@ -18,8 +18,6 @@ module Display
         print_row_num_after(row_index)
       end
       print_letter_legend
-
-      print_king_in_check_message(@player_in_check.name) if @player_in_check
     end
 
     private
