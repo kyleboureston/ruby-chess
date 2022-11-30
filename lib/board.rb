@@ -3,11 +3,10 @@
 # the one board to rule them all
 class Board
   include Display::Board
-  attr_reader :data, :player_in_check
+  attr_reader :data
 
   def initialize
-    @data            = nil
-    @player_in_check = false
+    @data = nil
   end
 
   def setup
@@ -45,14 +44,6 @@ class Board
       response << piece if piece.color == color
     end
     response
-  end
-
-  def add_player_in_check(player)
-    @player_in_check = player
-  end
-
-  def no_players_in_check
-    @player_in_check = nil
   end
 
   # valid_moves is an array of valid-move arrays (ex: [[0, 0], [2, 4], [1, 3]])
