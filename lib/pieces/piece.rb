@@ -2,7 +2,7 @@
 
 # mixin to give all the pieces their actual movements.
 class Piece
-  attr_accessor :position, :selected, :under_attack, :valid_moves
+  attr_accessor :position, :selected, :under_attack, :valid_moves, :king
   attr_reader :board, :color
 
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
@@ -16,6 +16,7 @@ class Piece
     @selected     = false
     @under_attack = false
     @valid_moves  = nil
+    @king         = nil
     @color        = color
     @position     = position
     @board        = board
@@ -24,7 +25,6 @@ class Piece
   def update(destination)
     mark_unselected
     update_position(destination)
-    find_valid_moves
   end
 
   def mark_selected
@@ -41,6 +41,10 @@ class Piece
 
   def set_safe
     self.under_attack = false
+  end
+
+  def add_king(king)
+    self.king = king
   end
 
   private
@@ -98,34 +102,41 @@ class Piece
     response
   end
 
-  def valid?(pos, x = pos[0], y = pos[1])
+  def valid?(pos)
+    x, y = pos
     x.between?(0, 7) && y.between?(0, 7)
   end
 
-  def not_valid?(pos, x = pos[0], y = pos[1])
+  def not_valid?(pos)
+    x, y = pos
     !x.between?(0, 7) || !y.between?(0, 7)
   end
 
-  def blank?(pos, x = pos[0], y = pos[1])
-    @board.data[x].nil? || @board.data[x][y].nil?
+  def blank?(pos, board = @board)
+    x, y = pos
+    board.data[x].nil? || board.data[x][y].nil?
   end
 
-  def not_blank?(pos, x = pos[0], y = pos[1])
-    !@board.data[x].nil? && !@board.data[x][y].nil?
+  def not_blank?(pos, board = @board)
+    x, y = pos
+    !board.data[x].nil? && !board.data[x][y].nil?
   end
 
-  def get_foe(pos, color, x = pos[0], y = pos[1])
-    piece = @board.data[x][y]
+  def get_foe(pos, color, board = @board)
+    x, y = pos
+    piece = board.data[x][y]
     piece.name if piece.color != color
   end
 
-  def contains_foe?(pos, color, x = pos[0], y = pos[1])
-    piece = @board.data[x][y]
+  def contains_foe?(pos, color, board = @board)
+    x, y = pos
+    piece = board.data[x][y]
     piece.color != color
   end
 
-  def contains_friend?(pos, color, x = pos[0], y = pos[1])
-    piece = @board.data[x][y]
+  def contains_friend?(pos, color, board = @board)
+    x, y = pos
+    piece = board.data[x][y]
     piece.color == color
   end
 
