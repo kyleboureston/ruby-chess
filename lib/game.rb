@@ -20,7 +20,8 @@ class Game
     setup_players
     update_pieces_valid_moves
     print_loading_board_message
-    play_turn while @current_player.king.check_mate_positions.nil?
+    sleep(2)
+    play_turn until @current_player.king.check_mate?
     conclusion(@current_player, next_player)
   end
 
@@ -46,19 +47,21 @@ class Game
   end
 
   def play_turn
+    # Display the board and initial message to user
     @board.display
+    print_game_prompt(@current_player)
     # Get the piece the player wants to move
     print_piece_to_move_input(@current_player)
-    piece = player_piece_input(@current_player.piece_positions, @board) # returns the piece object
+    piece = player_piece_input(@current_player.piece_positions, @board) # returns a piece object
     valid_moves = piece.valid_moves
     # Mark this piece as selected and show the valid moves for the piece
     update_board_with_selected(piece, valid_moves)
-    # Get the destiation that the player wants to move the selected piece
+    # Get the destination that the player wants to move the selected piece
     print_piece_destination_input(piece, valid_moves)
     destination = piece_destination_input(valid_moves)
     # Unselect the piece, remove the valid moves from board, and move the piece
     move_piece(piece, destination)
-
+    # Switch to the next player and determine if that player's king is in check
     next_player
     check_on_king
   end
@@ -81,8 +84,6 @@ class Game
   def next_player
     next_player = @current_player == @player1 ? @player2 : @player1
     @current_player = next_player
-    @current_player.king = @board.get_king(@current_player.color)
-    @current_player
   end
 
   def update_board_with_selected(piece, valid_moves)
@@ -108,8 +109,6 @@ class Game
 
   def check_on_king
     @current_player.king.update_check_positions
-    check_positions = @current_player.king.check_positions
-    check_positions.nil? ? @board.no_players_in_check : @board.add_player_in_check(@current_player)
   end
 
   def conclusion(losing_player, winning_player)
