@@ -3,7 +3,7 @@
 # the one board to rule them all
 class Board
   include Display::Board
-  attr_reader :data
+  attr_reader :data, :player_in_check
 
   def initialize
     @data            = nil
@@ -11,9 +11,10 @@ class Board
   end
 
   def setup
-    # add the pieces to the board
     @data = generate_board
-    # Add the valid_moves to each piece
+  end
+
+  def update_valid_moves
     @data.each do |row|
       row.each do |square|
         next if square.nil?
@@ -23,9 +24,9 @@ class Board
     end
   end
 
-  def move(piece, destination)
-    remove(piece)
-    add(piece, destination)
+  def get_piece(piece_position)
+    row, col = piece_position
+    @data[row][col]
   end
 
   def get_king(color)
@@ -36,16 +37,21 @@ class Board
     end.first
   end
 
-  def get_piece(piece_position)
-    row, col = piece_position
-    @data[row][col]
+  def find_friendly_pieces(color)
+    response = []
+    @data.flatten.each do |piece|
+      next if piece.nil?
+
+      response << piece if piece.color == color
+    end
+    response
   end
 
   def add_player_in_check(player)
     @player_in_check = player
   end
 
-  def remove_player_in_check
+  def no_players_in_check
     @player_in_check = nil
   end
 
@@ -73,6 +79,17 @@ class Board
         piece.name == 'valid_move' ? nil : piece
       end
     end
+  end
+
+  # Used Marshal.load as game is all loaded within memory
+  def deep_clone
+    serialized = Marshal.dump(self)
+    Marshal.load(serialized)
+  end
+
+  def move(piece, destination)
+    remove(piece)
+    add(piece, destination)
   end
 
   private
@@ -123,7 +140,7 @@ class Board
     end
   end
 
-  # For reference, this takes care of movement to a blank square and to one with a foe
+  # For reference, this can handle BOTH when a piece is added (moved) to [1] a blank square AND [2] a square with a foe
   def add(piece, destination)
     row, col = destination
     @data[row][col] = piece
