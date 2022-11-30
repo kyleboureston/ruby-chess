@@ -11,7 +11,9 @@ module Display
     def print_welcome_message
       puts 'Welcome to chess!'
       print_spacer
-      puts "Chess is a two-player turn-based board game. Each turn, a player can move one piece of their color. A player wins by putting their oponent's king in check mate. Check mate is when a king has no available moves."
+      puts 'Chess is a two-player turn-based board game. Each turn, a player can move one piece of their color. Each piece has its own move pattern (for example, the King can move 1 square in any direction).'
+      print_spacer
+      puts "A player wins by putting their oponent's King in check mate. Check mate happens when a King has no available moves."
       print_spacer
       puts "Ready to play? Let's start with names..."
     end
