@@ -11,7 +11,7 @@ class Knight < Piece
   end
 
   def find_valid_moves
-    @valid_moves = valid_knight_moves(@position, @color)
+    @valid_moves = valid_knight_moves(@position, @color).reject { |move| @king.puts_king_in_check?(self, move) }
   end
 
   private
