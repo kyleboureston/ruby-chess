@@ -29,7 +29,7 @@ module Conversions
     # [1] Pull out the row and column
     row, col = array_notation
     # [2] Convert col to a letter
-    col = 'ABCDEFGH'[col]
+    col = 'abcdefgh'[col]
     # [3] Convert row out of zero-based indexing
     # AND
     # [4] Convert the row to print in array notation order
