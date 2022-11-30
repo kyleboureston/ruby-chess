@@ -61,8 +61,25 @@ module Display
       puts "\e[31mWarning:\e[0m #{player_name} your king is in check. Your next move must protect your king!"
     end
 
-    def dprint_game_winner_message
-      'Congrats!'
+    def print_game_winner_message(losing_player, winning_player)
+      2.times { print_spacer }
+      puts 'GAME OVER!'.green
+      print_spacer
+      puts "#{losing_player.name} your king is in check mate, you lose. So congrats #{winning_player.name}, you've won! You're so amaaazin!"
+    end
+
+    def print_play_again_message
+      print_spacer
+      puts 'Want to play again? Enter Y/N.'
+    end
+
+    def print_play_again_warning
+      puts 'Please try again. Enter Y or N.'
+    end
+
+    def print_loading_board_message
+      print_spacer
+      puts 'Loading board...'
     end
 
     def print_spacer
