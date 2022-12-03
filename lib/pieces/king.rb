@@ -6,14 +6,13 @@ class King < Piece
   attr_reader :name, :character
 
   def initialize(color, position, board)
-    @name = 'king'
-    @character = color == 'white' ? "\u2654" : "\u265A"
-    @check_positions = []
+    @name          = 'king'
+    @character     = color == 'white' ? "\u2654" : "\u265A"
     super(color, position, board)
   end
 
   def find_valid_moves
-    @valid_moves = valid_king_moves(@position, @color).reject { |move| find_check_positions(move) }
+    @valid_moves = valid_king_moves(@position, @color).reject { |move| find_check_positions(move).any? }
   end
 
   # Check whether a move puts the king into check
@@ -29,32 +28,21 @@ class King < Piece
     king_clone = board_clone.get_king(@color)
     # determine whether the move put the king in check (will return nil or an array of positions)
     response = find_check_positions(king_clone.position, board_clone)
-    # response is an array of positions that put the king in check. So if there is 
+    # response is an array of positions that put the king in check. So if there is
     # at least 1 'check_position' in the array, that means the king is in check.
     response.length.positive?
   end
 
-  # Finds what pieces are putting the king in check
-  def find_check_positions(pos = @position, board = @board)
-    response = []
-    response.push(
-      diagonol_check(pos, board),
-      straight_check(pos, board),
-      knight_check(pos, board),
-      pawn_check(pos, board),
-      king_check(pos, board)
-    )
-    flatten_to_2d(response.compact)
-  end
-
-  def update_check_positions
-    @check_positions = find_check_positions
+  def check?
+    check_positions = find_check_positions
+    p check_positions
+    check_positions.any?
   end
 
   def check_mate?
     move_options = 0
     # If king isn't currently in check, there's no way he could be in check_mate.
-    return false if @check_positions.length.zero?
+    return false unless self.check?
 
     # Get all the pieces of the same color of this king
     pieces = @board.find_friendly_pieces(@color)
@@ -95,6 +83,7 @@ class King < Piece
   # checks if a pawn puts the king in check
   def pawn_check(pos = @position, board = @board, response = [])
     valid_attackers = ['pawn']
+    # @color in this case is the king.color. So for a white king, we are checking if it could be attacked by a black pawn.
     players_pawn_attacks = @color == 'white' ? PAWN_ATTACKS_BLACK : PAWN_ATTACKS_WHITE
     players_pawn_attacks.each { |move| response << check_attacks(pos, @color, move, valid_attackers, board) }
     flatten_to_2d(response.compact)
@@ -138,5 +127,18 @@ class King < Piece
     return unless valid_attackers.include?(foe)
 
     new_pos
+  end
+
+  # Finds what pieces are putting the king in check
+  def find_check_positions(pos = @position, board = @board)
+    response = []
+    response.push(
+      diagonol_check(pos, board),
+      straight_check(pos, board),
+      knight_check(pos, board),
+      pawn_check(pos, board),
+      king_check(pos, board)
+    )
+    flatten_to_2d(response.compact)
   end
 end

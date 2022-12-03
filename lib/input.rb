@@ -62,6 +62,14 @@ module Input
     piece_destination_input(valid_moves)
   end
 
+  def upgrade_input(piece, valid_upgrade_names)
+    upgrade_input = gets.chomp
+    return upgrade_input if valid_upgrade_names.include?(upgrade_input)
+
+    print_print_upgrade_piece_warning
+    piece_level_up_input(piece, valid_upgrade_names)
+  end
+
   def play_again_input
     yes_or_no = gets.chomp
     return yes_or_no if yes_or_no.match(/[YN]/i)

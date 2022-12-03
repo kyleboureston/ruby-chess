@@ -3,14 +3,27 @@
 # the one board to rule them all
 class Board
   include Display::Board
-  attr_reader :data
+  attr_reader :data, :piece_keys
 
   def initialize
-    @data = nil
+    @data         = nil
+    @piece_keys   = []
   end
 
   def setup
     @data = generate_board
+  end
+
+  def move(piece, destination)
+    remove(piece)
+    remove_en_passant(piece, destination) if piece.name == 'pawn'
+    add(piece, destination)
+  end
+
+  # For reference, this can handle BOTH when a piece is added (moved) to [1] a blank square AND [2] a square with a foe
+  def add(piece, destination)
+    row, col = destination
+    @data[row][col] = piece
   end
 
   def update_valid_moves
@@ -23,8 +36,10 @@ class Board
     end
   end
 
-  def get_piece(piece_position)
-    row, col = piece_position
+  def get_piece(position)
+    row, col = position
+    return nil if !row.between?(0, 7) || !col.between?(0, 7)
+
     @data[row][col]
   end
 
@@ -78,9 +93,13 @@ class Board
     Marshal.load(serialized)
   end
 
-  def move(piece, destination)
-    remove(piece)
-    add(piece, destination)
+  def create_major_row(color, row)
+    [
+      Rook.new(color, [row, 0], self), Knight.new(color, [row, 1], self),
+      Bishop.new(color, [row, 2], self), Queen.new(color, [row, 3], self),
+      King.new(color, [row, 4], self), Bishop.new(color, [row, 5], self),
+      Knight.new(color, [row, 6], self), Rook.new(color, [row, 7], self)
+    ]
   end
 
   private
@@ -108,15 +127,6 @@ class Board
     response
   end
 
-  def create_major_row(color, row)
-    [
-      Rook.new(color, [row, 0], self), Knight.new(color, [row, 1], self),
-      Bishop.new(color, [row, 2], self), Queen.new(color, [row, 3], self),
-      King.new(color, [row, 4], self), Bishop.new(color, [row, 5], self),
-      Knight.new(color, [row, 6], self), Rook.new(color, [row, 7], self)
-    ]
-  end
-
   def create_nil_row
     Array.new(8) { nil }
   end
@@ -131,9 +141,31 @@ class Board
     end
   end
 
-  # For reference, this can handle BOTH when a piece is added (moved) to [1] a blank square AND [2] a square with a foe
-  def add(piece, destination)
-    row, col = destination
-    @data[row][col] = piece
+  def remove_en_passant(piece, destination)
+    p destination
+    all_enemy_pawns = find_all_enemy_pawns(piece.color)
+    enemies_passant_attack_positions = all_enemy_pawns.map(&:passant_attack_position)
+    p destination unless enemies_passant_attack_positions.compact.empty?
+    p enemies_passant_attack_positions unless enemies_passant_attack_positions.compact.empty?
+    sleep(1) unless enemies_passant_attack_positions.compact.empty?
+    return unless enemies_passant_attack_positions.include?(destination)
+
+    pawn_attacked_passant = all_enemy_pawns.find { |pawn| pawn.passant_attack_position == destination }
+    p pawn_attacked_passant
+    sleep(3)
+    remove(pawn_attacked_passant)
+  end
+
+  def find_all_enemy_pawns(color)
+    @data.flatten
+         .reject(&:nil?)
+         .keep_if { |piece| piece.name == 'pawn' }
+         .reject { |piece| piece.color == color }
+  end
+
+  def find_all_occupied_positions
+    @data.flatten
+         .reject(&:nil?)
+         .map(&:position)
   end
 end

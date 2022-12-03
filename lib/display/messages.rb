@@ -30,8 +30,9 @@ module Display
 
     def print_game_prompt(player)
       print_whose_turn_it_is_anyway(player)
-      print_king_in_check_message(player.name) unless player.king.check_positions.length.zero?
+      print_king_in_check_message(player.name) if player.king.check?
       print_available_moves_message(player)
+      print_piece_to_move_input
     end
 
     def print_whose_turn_it_is_anyway(player)
@@ -74,6 +75,17 @@ module Display
       chess_notation_valid_moves = valid_moves.map { |move_array_notation| chess_notation(move_array_notation) }
       print_spacer
       puts "Where do you want to move your #{piece.name} to? Valid moves = #{chess_notation_valid_moves.join(', ')} (marked with \e[31m\u25CF\e[0m above)"
+    end
+
+    def print_upgrade_message(player_name, piece, valid_upgrade_names)
+      print_spacer
+      puts "Congrats #{player_name}! Your pawn in position #{chess_notation(piece.position)} can be upgraded. You can upgrade it to one of the following pieces: #{valid_upgrade_names.join(', ')}"
+      print_spacer
+      puts 'What piece do you want to upgrade to?'
+    end
+
+    def print_print_upgrade_piece_warning
+      puts "\e[31m#ERR:\e[0m This piece is not an available upgrade."
     end
 
     def print_invalid_destination_warning

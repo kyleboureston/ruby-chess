@@ -3,7 +3,7 @@
 # mixin to give all the pieces their actual movements.
 class Piece
   attr_accessor :position, :selected, :under_attack, :valid_moves, :king
-  attr_reader :board, :color
+  attr_reader :board, :color, :key
 
   DIAGONOL_MOVES = [[1, 1], [1, -1], [-1, 1], [-1, -1]].freeze
   STRAIGHT_MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1]].freeze
@@ -19,12 +19,19 @@ class Piece
     @king         = nil
     @color        = color
     @position     = position
+    @starting_col = position[1]
     @board        = board
+    @key          = create_key
   end
 
-  def update(destination)
+  def update(position, destination)
     mark_unselected
     update_position(destination)
+    update_pawn(position, destination) if self.name == 'pawn'
+  end
+
+  def update_position(destination)
+    self.position = destination
   end
 
   def mark_selected
@@ -48,6 +55,23 @@ class Piece
   end
 
   private
+
+  def create_key
+    # Generate a random key
+    key = generate_random_key
+    # Add the random key to the board keys
+    @board.piece_keys << key
+    # Return the random key
+    key
+  end
+
+  def generate_random_key
+    key = "#{self.name}#{rand(1..1000)}"
+    return key if @board.piece_keys.empty?
+    return key unless @board.piece_keys.include?(key)
+
+    generate_random_key
+  end
 
   def valid_diagonol_moves(position, color, response = [])
     DIAGONOL_MOVES.each { |move| response << check_move_path(position, color, move) }
@@ -138,9 +162,5 @@ class Piece
     x, y = pos
     piece = board.data[x][y]
     piece.color == color
-  end
-
-  def update_position(destination)
-    self.position = destination
   end
 end
